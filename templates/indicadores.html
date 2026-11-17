@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Indicadores - QualityCheck</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f5f7fa;
+            color: #1f2937;
+        }
+
+        /* =========================
+           CABECERA
+        ========================= */
+
+        header {
+            background: linear-gradient(
+                135deg,
+                #173b5e,
+                #1f5f8f
+            );
+            color: white;
+            padding: 24px 40px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        header p {
+            margin: 6px 0 0;
+            opacity: 0.85;
+        }
+
+        /* =========================
+           CONTENEDOR
+        ========================= */
+
+        .contenedor {
+            width: 92%;
+            max-width: 1300px;
+            margin: 28px auto;
+        }
+
+        /* =========================
+           MENÚ
+        ========================= */
+
+        .menu {
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+
+            box-shadow:
+                0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: #374151;
+            padding: 10px 15px;
+            border-radius: 7px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .menu a:hover {
+            background: #eef4f9;
+            color: #173b5e;
+        }
+
+        .menu .activo {
+            background: #173b5e;
+            color: white;
+        }
+
+        .menu .activo:hover {
+            background: #173b5e;
+            color: white;
+        }
+
+        /* =========================
+           ENCABEZADO
+        ========================= */
+
+        .encabezado {
+            margin-bottom: 22px;
+        }
+
+        .encabezado h2 {
+            margin: 0;
+            font-size: 25px;
+            color: #173b5e;
+        }
+
+        .encabezado p {
+            margin: 6px 0 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        /* =========================
+           SECCIONES
+        ========================= */
+
+        .titulo-seccion {
+            margin-top: 35px;
+            margin-bottom: 15px;
+            color: #173b5e;
+            font-size: 21px;
+        }
+
+        /* =========================
+           TARJETAS
+        ========================= */
+
+        .tarjetas {
+            display: grid;
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(240px, 1fr)
+                );
+            gap: 18px;
+        }
+
+        .tarjeta {
+            background: white;
+            padding: 22px;
+            border-radius: 10px;
+            border: 1px solid #eef1f4;
+
+            box-shadow:
+                0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .tarjeta h3 {
+            margin: 0;
+            font-size: 15px;
+            color: #6b7280;
+        }
+
+        .porcentaje {
+            font-size: 38px;
+            font-weight: bold;
+            color: #173b5e;
+            margin: 12px 0 6px;
+        }
+
+        .detalle {
+            margin: 0;
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* =========================
+           PROGRESO
+        ========================= */
+
+        .barra-progreso {
+            width: 100%;
+            height: 12px;
+            margin-top: 14px;
+        }
+
+        progress {
+            border: none;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        progress::-webkit-progress-bar {
+            background: #e5e7eb;
+            border-radius: 10px;
+        }
+
+        progress::-webkit-progress-value {
+            background: #1f6fb2;
+            border-radius: 10px;
+        }
+
+        /* =========================
+           TABLA
+        ========================= */
+
+        .tabla-contenedor {
+            background: white;
+            border-radius: 10px;
+            overflow-x: auto;
+
+            box-shadow:
+                0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 500px;
+        }
+
+        th {
+            background: #eef3f7;
+            color: #374151;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #dce3ea;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #edf0f2;
+            font-size: 14px;
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* =========================
+           SEVERIDAD
+        ========================= */
+
+        .etiqueta {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .critica {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .alta {
+            background: #ffedd5;
+            color: #9a3412;
+        }
+
+        .media {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .baja {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .otra {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        /* =========================
+           SIN DATOS
+        ========================= */
+
+        .sin-datos {
+            background: white;
+            padding: 35px;
+            border-radius: 10px;
+            text-align: center;
+            color: #6b7280;
+
+            box-shadow:
+                0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .sin-datos h3 {
+            margin-top: 0;
+            color: #173b5e;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 768px) {
+
+            header {
+                padding: 20px;
+            }
+
+            .contenedor {
+                width: 95%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<header>
+
+    <h1>
+        QualityCheck
+    </h1>
+
+    <p>
+        Sistema de gestión y evaluación de calidad de software
+    </p>
+
+</header>
+
+
+<div class="contenedor">
+
+    <!-- =========================
+         MENÚ
+    ========================== -->
+
+    <nav class="menu">
+
+        <a href="{{ url_for('listar_proyectos') }}">
+            Proyectos
+        </a>
+
+        <a href="{{ url_for('listar_requisitos') }}">
+            Requisitos
+        </a>
+
+        <a href="{{ url_for('listar_casos_prueba') }}">
+            Casos de prueba
+        </a>
+
+        <a href="{{ url_for('listar_defectos') }}">
+            Defectos
+        </a>
+
+        <a
+            href="{{ url_for('indicadores') }}"
+            class="activo"
+        >
+            Indicadores
+        </a>
+
+        <a href="{{ url_for('listar_evaluaciones') }}">
+            Evaluación
+        </a>
+
+        <a href="{{ url_for('informe') }}">
+            Informe
+        </a>
+
+    </nav>
+
+
+    <!-- =========================
+         ENCABEZADO
+    ========================== -->
+
+    <div class="encabezado">
+
+        <h2>
+            Indicadores de calidad
+        </h2>
+
+        <p>
+            Consulta las principales métricas obtenidas
+            a partir de requisitos, pruebas y defectos.
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         RESUMEN
+    ========================== -->
+
+    <h2 class="titulo-seccion">
+        Resumen de calidad
+    </h2>
+
+
+    <div class="tarjetas">
+
+        <!-- PRUEBAS -->
+
+        <div class="tarjeta">
+
+            <h3>
+                Pruebas aprobadas
+            </h3>
+
+            <div class="porcentaje">
+                {{ porcentaje_pruebas }}%
+            </div>
+
+            <p class="detalle">
+                {{ pruebas_aprobadas }}
+                de
+                {{ total_pruebas }}
+                pruebas ejecutadas.
+            </p>
+
+            <progress
+                class="barra-progreso"
+                value="{{ porcentaje_pruebas }}"
+                max="100"
+            >
+            </progress>
+
+        </div>
+
+
+        <!-- REQUISITOS -->
+
+        <div class="tarjeta">
+
+            <h3>
+                Requisitos verificados
+            </h3>
+
+            <div class="porcentaje">
+                {{ porcentaje_requisitos }}%
+            </div>
+
+            <p class="detalle">
+                {{ requisitos_verificados }}
+                de
+                {{ total_requisitos }}
+                requisitos.
+            </p>
+
+            <progress
+                class="barra-progreso"
+                value="{{ porcentaje_requisitos }}"
+                max="100"
+            >
+            </progress>
+
+        </div>
+
+
+        <!-- DEFECTOS -->
+
+        <div class="tarjeta">
+
+            <h3>
+                Defectos resueltos
+            </h3>
+
+            {% if total_defectos > 0 %}
+
+                <div class="porcentaje">
+                    {{ porcentaje_defectos }}%
+                </div>
+
+                <p class="detalle">
+                    {{ defectos_resueltos }}
+                    de
+                    {{ total_defectos }}
+                    defectos registrados.
+                </p>
+
+                <progress
+                    class="barra-progreso"
+                    value="{{ porcentaje_defectos }}"
+                    max="100"
+                >
+                </progress>
+
+            {% else %}
+
+                <div class="porcentaje">
+                    -
+                </div>
+
+                <p class="detalle">
+                    No hay defectos registrados.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         DEFECTOS POR SEVERIDAD
+    ========================== -->
+
+    <h2 class="titulo-seccion">
+        Defectos abiertos por severidad
+    </h2>
+
+
+    {% if defectos_por_severidad %}
+
+        <div class="tabla-contenedor">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Severidad
+                        </th>
+
+                        <th>
+                            Cantidad
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for defecto in defectos_por_severidad %}
+
+                        <tr>
+
+                            <td>
+
+                                {% if defecto['severidad'] == 'Crítica' %}
+
+                                    <span class="etiqueta critica">
+                                        Crítica
+                                    </span>
+
+                                {% elif defecto['severidad'] == 'Alta' %}
+
+                                    <span class="etiqueta alta">
+                                        Alta
+                                    </span>
+
+                                {% elif defecto['severidad'] == 'Media' %}
+
+                                    <span class="etiqueta media">
+                                        Media
+                                    </span>
+
+                                {% elif defecto['severidad'] == 'Baja' %}
+
+                                    <span class="etiqueta baja">
+                                        Baja
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="etiqueta otra">
+                                        {{ defecto['severidad'] }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+                                {{ defecto['total'] }}
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+    {% else %}
+
+
+        <div class="sin-datos">
+
+            <h3>
+                No hay defectos abiertos
+            </h3>
+
+            <p>
+                Actualmente no existen defectos pendientes
+                agrupados por severidad.
+            </p>
+
+        </div>
+
+
+    {% endif %}
+
+</div>
+
+</body>
+
+</html>

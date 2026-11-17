@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Casos de prueba - QualityCheck</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f5f7fa;
+            color: #1f2937;
+        }
+
+        /* =========================
+           CABECERA
+        ========================= */
+
+        header {
+            background: linear-gradient(
+                135deg,
+                #173b5e,
+                #1f5f8f
+            );
+            color: white;
+            padding: 24px 40px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        header p {
+            margin: 6px 0 0;
+            opacity: 0.85;
+        }
+
+        /* =========================
+           CONTENEDOR
+        ========================= */
+
+        .contenedor {
+            width: 92%;
+            max-width: 1400px;
+            margin: 28px auto;
+        }
+
+        /* =========================
+           MENÚ
+        ========================= */
+
+        .menu {
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+
+            box-shadow:
+                0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: #374151;
+            padding: 10px 15px;
+            border-radius: 7px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .menu a:hover {
+            background: #eef4f9;
+            color: #173b5e;
+        }
+
+        .menu .activo {
+            background: #173b5e;
+            color: white;
+        }
+
+        .menu .activo:hover {
+            background: #173b5e;
+            color: white;
+        }
+
+        /* =========================
+           ENCABEZADO DEL MÓDULO
+        ========================= */
+
+        .encabezado {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .titulo h2 {
+            margin: 0;
+            font-size: 25px;
+            color: #173b5e;
+        }
+
+        .titulo p {
+            margin: 6px 0 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        /* =========================
+           BOTÓN PRINCIPAL
+        ========================= */
+
+        .boton-principal {
+            background: #1f6fb2;
+            color: white;
+            text-decoration: none;
+            padding: 11px 18px;
+            border-radius: 7px;
+            font-weight: bold;
+            font-size: 14px;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+
+        .boton-principal:hover {
+            background: #15598f;
+        }
+
+        /* =========================
+           TARJETA
+        ========================= */
+
+        .tarjeta {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+
+            box-shadow:
+                0 2px 10px rgba(0, 0, 0, 0.06);
+        }
+
+        /* =========================
+           TABLA
+        ========================= */
+
+        .tabla-contenedor {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1150px;
+        }
+
+        th {
+            background: #eef3f7;
+            color: #374151;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #dce3ea;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #edf0f2;
+            font-size: 14px;
+            vertical-align: top;
+            line-height: 1.45;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .codigo {
+            font-weight: bold;
+            color: #173b5e;
+        }
+
+        .objetivo {
+            min-width: 240px;
+        }
+
+        .proyecto {
+            font-weight: bold;
+            color: #173b5e;
+        }
+
+        /* =========================
+           ETIQUETAS DE ESTADO
+        ========================= */
+
+        .etiqueta {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .estado-pendiente {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .estado-aprobado {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .estado-fallido {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .estado-bloqueado {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .estado-otro {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        /* =========================
+           ACCIONES
+        ========================= */
+
+        .acciones {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .boton-editar {
+            background: #fff4d6;
+            color: #9a6700;
+            text-decoration: none;
+            border: 1px solid #f0c96b;
+            padding: 7px 11px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .boton-editar:hover {
+            background: #ffe9a8;
+        }
+
+        .boton-eliminar {
+            background: #fde8e8;
+            color: #b42318;
+            border: 1px solid #f3b4b4;
+            padding: 7px 11px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .boton-eliminar:hover {
+            background: #fbd1d1;
+        }
+
+        .form-eliminar {
+            display: inline;
+            margin: 0;
+        }
+
+        /* =========================
+           SIN DATOS
+        ========================= */
+
+        .vacio {
+            background: white;
+            padding: 50px 30px;
+            text-align: center;
+            border-radius: 10px;
+
+            box-shadow:
+                0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .vacio h3 {
+            margin-top: 0;
+            color: #173b5e;
+        }
+
+        .vacio p {
+            color: #6b7280;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 768px) {
+
+            header {
+                padding: 20px;
+            }
+
+            .contenedor {
+                width: 95%;
+            }
+
+            .encabezado {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .boton-principal {
+                width: 100%;
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<header>
+
+    <h1>
+        QualityCheck
+    </h1>
+
+    <p>
+        Sistema de gestión y evaluación de calidad de software
+    </p>
+
+</header>
+
+
+<div class="contenedor">
+
+    <!-- =========================
+         MENÚ
+    ========================== -->
+
+    <nav class="menu">
+
+        <a href="{{ url_for('listar_proyectos') }}">
+            Proyectos
+        </a>
+
+        <a href="{{ url_for('listar_requisitos') }}">
+            Requisitos
+        </a>
+
+        <a
+            href="{{ url_for('listar_casos_prueba') }}"
+            class="activo"
+        >
+            Casos de prueba
+        </a>
+
+        <a href="{{ url_for('listar_defectos') }}">
+            Defectos
+        </a>
+
+        <a href="{{ url_for('indicadores') }}">
+            Indicadores
+        </a>
+
+        <a href="{{ url_for('listar_evaluaciones') }}">
+            Evaluación
+        </a>
+
+        <a href="{{ url_for('informe') }}">
+            Informe
+        </a>
+
+    </nav>
+
+
+    <!-- =========================
+         ENCABEZADO
+    ========================== -->
+
+    <div class="encabezado">
+
+        <div class="titulo">
+
+            <h2>
+                Gestión de casos de prueba
+            </h2>
+
+            <p>
+                Administra los casos utilizados para validar
+                los requisitos de cada proyecto.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('nuevo_caso_prueba') }}"
+            class="boton-principal"
+        >
+            + Nuevo caso de prueba
+        </a>
+
+    </div>
+
+
+    <!-- =========================
+         CONTENIDO
+    ========================== -->
+
+    {% if casos %}
+
+        <div class="tarjeta">
+
+            <div class="tabla-contenedor">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Código</th>
+
+                            <th>Objetivo</th>
+
+                            <th>Requisito</th>
+
+                            <th>Proyecto</th>
+
+                            <th>Estado</th>
+
+                            <th>Fecha</th>
+
+                            <th>Ejecutor</th>
+
+                            <th>Acciones</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for caso in casos %}
+
+                            <tr>
+
+                                <td>
+                                    {{ caso['id'] }}
+                                </td>
+
+
+                                <td class="codigo">
+                                    {{ caso['codigo'] }}
+                                </td>
+
+
+                                <td class="objetivo">
+                                    {{ caso['objetivo'] }}
+                                </td>
+
+
+                                <td>
+                                    {{ caso['requisito'] }}
+                                </td>
+
+
+                                <td class="proyecto">
+                                    {{ caso['proyecto'] }}
+                                </td>
+
+
+                                <td>
+
+                                    {% if caso['estado'] == 'Pendiente' %}
+
+                                        <span
+                                            class="etiqueta estado-pendiente"
+                                        >
+                                            Pendiente
+                                        </span>
+
+                                    {% elif caso['estado'] == 'Aprobado' %}
+
+                                        <span
+                                            class="etiqueta estado-aprobado"
+                                        >
+                                            Aprobado
+                                        </span>
+
+                                    {% elif caso['estado'] == 'Fallido' %}
+
+                                        <span
+                                            class="etiqueta estado-fallido"
+                                        >
+                                            Fallido
+                                        </span>
+
+                                    {% elif caso['estado'] == 'Bloqueado' %}
+
+                                        <span
+                                            class="etiqueta estado-bloqueado"
+                                        >
+                                            Bloqueado
+                                        </span>
+
+                                    {% else %}
+
+                                        <span
+                                            class="etiqueta estado-otro"
+                                        >
+                                            {{ caso['estado'] }}
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+                                    {{ caso['fecha_ejecucion'] or '-' }}
+                                </td>
+
+
+                                <td>
+                                    {{ caso['ejecutor'] or '-' }}
+                                </td>
+
+
+                                <td>
+
+                                    <div class="acciones">
+
+                                        <a
+                                            href="{{ url_for(
+                                                'editar_caso_prueba',
+                                                id=caso['id']
+                                            ) }}"
+                                            class="boton-editar"
+                                        >
+                                            Editar
+                                        </a>
+
+
+                                        <form
+                                            action="{{ url_for(
+                                                'eliminar_caso_prueba',
+                                                id=caso['id']
+                                            ) }}"
+                                            method="POST"
+                                            class="form-eliminar"
+                                            onsubmit="return confirm(
+                                                '¿Está seguro de eliminar este caso de prueba?'
+                                            );"
+                                        >
+
+                                            <button
+                                                type="submit"
+                                                class="boton-eliminar"
+                                            >
+                                                Eliminar
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+    {% else %}
+
+
+        <div class="vacio">
+
+            <h3>
+                No hay casos de prueba registrados
+            </h3>
+
+            <p>
+                Crea el primer caso de prueba para comenzar
+                a validar los requisitos del proyecto.
+            </p>
+
+            <a
+                href="{{ url_for('nuevo_caso_prueba') }}"
+                class="boton-principal"
+            >
+                + Crear caso de prueba
+            </a>
+
+        </div>
+
+
+    {% endif %}
+
+</div>
+
+</body>
+
+</html>

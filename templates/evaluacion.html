@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Evaluación de calidad - QualityCheck</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f5f7fa;
+            color: #1f2937;
+        }
+
+        /* =========================
+           CABECERA
+        ========================= */
+
+        header {
+            background: linear-gradient(
+                135deg,
+                #173b5e,
+                #1f5f8f
+            );
+            color: white;
+            padding: 24px 40px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        header p {
+            margin: 6px 0 0;
+            opacity: 0.85;
+        }
+
+        /* =========================
+           CONTENEDOR
+        ========================= */
+
+        .contenedor {
+            width: 92%;
+            max-width: 1400px;
+            margin: 28px auto;
+        }
+
+        /* =========================
+           MENÚ
+        ========================= */
+
+        .menu {
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+
+            box-shadow:
+                0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: #374151;
+            padding: 10px 15px;
+            border-radius: 7px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .menu a:hover {
+            background: #eef4f9;
+            color: #173b5e;
+        }
+
+        .menu .activo {
+            background: #173b5e;
+            color: white;
+        }
+
+        .menu .activo:hover {
+            background: #173b5e;
+            color: white;
+        }
+
+        /* =========================
+           ENCABEZADO DEL MÓDULO
+        ========================= */
+
+        .encabezado {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .titulo h2 {
+            margin: 0;
+            font-size: 25px;
+            color: #173b5e;
+        }
+
+        .titulo p {
+            margin: 6px 0 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        /* =========================
+           BOTÓN PRINCIPAL
+        ========================= */
+
+        .boton-principal {
+            background: #1f6fb2;
+            color: white;
+            text-decoration: none;
+            padding: 11px 18px;
+            border-radius: 7px;
+            font-weight: bold;
+            font-size: 14px;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+
+        .boton-principal:hover {
+            background: #15598f;
+        }
+
+        /* =========================
+           TARJETA
+        ========================= */
+
+        .tarjeta {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+
+            box-shadow:
+                0 2px 10px rgba(0, 0, 0, 0.06);
+        }
+
+        /* =========================
+           TABLA
+        ========================= */
+
+        .tabla-contenedor {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1200px;
+        }
+
+        th {
+            background: #eef3f7;
+            color: #374151;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #dce3ea;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #edf0f2;
+            font-size: 14px;
+            vertical-align: top;
+            line-height: 1.45;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .proyecto {
+            font-weight: bold;
+            color: #173b5e;
+        }
+
+        .criterio,
+        .metodo,
+        .evidencia {
+            min-width: 220px;
+        }
+
+        /* =========================
+           ETIQUETAS
+        ========================= */
+
+        .etiqueta {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .caracteristica {
+            background: #ede9fe;
+            color: #6d28d9;
+        }
+
+        .resultado-cumple {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .resultado-parcial {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .resultado-no-cumple {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .resultado-otro {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .porcentaje {
+            font-weight: bold;
+            color: #173b5e;
+            white-space: nowrap;
+        }
+
+        /* =========================
+           ACCIONES
+        ========================= */
+
+        .acciones {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .editar {
+            background: #fff4d6;
+            color: #9a6700;
+            text-decoration: none;
+            border: 1px solid #f0c96b;
+            padding: 7px 11px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .editar:hover {
+            background: #ffe9a8;
+        }
+
+        .eliminar {
+            background: #fde8e8;
+            color: #b42318;
+            border: 1px solid #f3b4b4;
+            padding: 7px 11px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .eliminar:hover {
+            background: #fbd1d1;
+        }
+
+        .form-eliminar {
+            display: inline;
+            margin: 0;
+        }
+
+        /* =========================
+           SIN DATOS
+        ========================= */
+
+        .vacio {
+            background: white;
+            padding: 50px 30px;
+            text-align: center;
+            border-radius: 10px;
+
+            box-shadow:
+                0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .vacio h3 {
+            margin-top: 0;
+            color: #173b5e;
+        }
+
+        .vacio p {
+            color: #6b7280;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 768px) {
+
+            header {
+                padding: 20px;
+            }
+
+            .contenedor {
+                width: 95%;
+            }
+
+            .encabezado {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .boton-principal {
+                width: 100%;
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<header>
+
+    <h1>
+        QualityCheck
+    </h1>
+
+    <p>
+        Sistema de gestión y evaluación de calidad de software
+    </p>
+
+</header>
+
+
+<div class="contenedor">
+
+    <!-- =========================
+         MENÚ
+    ========================== -->
+
+    <nav class="menu">
+
+        <a href="{{ url_for('listar_proyectos') }}">
+            Proyectos
+        </a>
+
+        <a href="{{ url_for('listar_requisitos') }}">
+            Requisitos
+        </a>
+
+        <a href="{{ url_for('listar_casos_prueba') }}">
+            Casos de prueba
+        </a>
+
+        <a href="{{ url_for('listar_defectos') }}">
+            Defectos
+        </a>
+
+        <a href="{{ url_for('indicadores') }}">
+            Indicadores
+        </a>
+
+        <a
+            href="{{ url_for('listar_evaluaciones') }}"
+            class="activo"
+        >
+            Evaluación
+        </a>
+
+        <a href="{{ url_for('informe') }}">
+            Informe
+        </a>
+
+    </nav>
+
+
+    <!-- =========================
+         ENCABEZADO
+    ========================== -->
+
+    <div class="encabezado">
+
+        <div class="titulo">
+
+            <h2>
+                Evaluación ISO/IEC 25010
+            </h2>
+
+            <p>
+                Registra y consulta las evaluaciones de calidad
+                realizadas sobre los proyectos.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('nueva_evaluacion') }}"
+            class="boton-principal"
+        >
+            + Nueva evaluación
+        </a>
+
+    </div>
+
+
+    <!-- =========================
+         TABLA
+    ========================== -->
+
+    {% if evaluaciones %}
+
+        <div class="tarjeta">
+
+            <div class="tabla-contenedor">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Proyecto</th>
+
+                            <th>Característica</th>
+
+                            <th>Criterio</th>
+
+                            <th>Método</th>
+
+                            <th>Resultado</th>
+
+                            <th>%</th>
+
+                            <th>Evidencia</th>
+
+                            <th>Acciones</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for evaluacion in evaluaciones %}
+
+                            <tr>
+
+                                <td>
+                                    {{ evaluacion['id'] }}
+                                </td>
+
+
+                                <td class="proyecto">
+                                    {{ evaluacion['proyecto'] }}
+                                </td>
+
+
+                                <td>
+
+                                    <span class="etiqueta caracteristica">
+                                        {{ evaluacion['caracteristica'] }}
+                                    </span>
+
+                                </td>
+
+
+                                <td class="criterio">
+                                    {{ evaluacion['criterio'] }}
+                                </td>
+
+
+                                <td class="metodo">
+                                    {{ evaluacion['metodo_medicion'] }}
+                                </td>
+
+
+                                <td>
+
+                                    {% if evaluacion['resultado'] == 'Cumple' %}
+
+                                        <span
+                                            class="etiqueta resultado-cumple"
+                                        >
+                                            Cumple
+                                        </span>
+
+                                    {% elif evaluacion['resultado'] == 'Cumple parcialmente' %}
+
+                                        <span
+                                            class="etiqueta resultado-parcial"
+                                        >
+                                            Cumple parcialmente
+                                        </span>
+
+                                    {% elif evaluacion['resultado'] == 'No cumple' %}
+
+                                        <span
+                                            class="etiqueta resultado-no-cumple"
+                                        >
+                                            No cumple
+                                        </span>
+
+                                    {% else %}
+
+                                        <span
+                                            class="etiqueta resultado-otro"
+                                        >
+                                            {{ evaluacion['resultado'] }}
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td class="porcentaje">
+
+                                    {% if evaluacion['porcentaje'] is not none %}
+
+                                        {{ evaluacion['porcentaje'] }}%
+
+                                    {% else %}
+
+                                        -
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td class="evidencia">
+                                    {{ evaluacion['evidencia'] or '-' }}
+                                </td>
+
+
+                                <td>
+
+                                    <div class="acciones">
+
+                                        <a
+                                            href="{{ url_for(
+                                                'editar_evaluacion',
+                                                id=evaluacion['id']
+                                            ) }}"
+                                            class="editar"
+                                        >
+                                            Editar
+                                        </a>
+
+
+                                        <form
+                                            method="POST"
+                                            action="{{ url_for(
+                                                'eliminar_evaluacion',
+                                                id=evaluacion['id']
+                                            ) }}"
+                                            class="form-eliminar"
+                                            onsubmit="return confirm(
+                                                '¿Seguro que deseas eliminar esta evaluación?'
+                                            );"
+                                        >
+
+                                            <button
+                                                type="submit"
+                                                class="eliminar"
+                                            >
+                                                Eliminar
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+    {% else %}
+
+
+        <div class="vacio">
+
+            <h3>
+                No hay evaluaciones registradas
+            </h3>
+
+            <p>
+                Registra la primera evaluación ISO/IEC 25010
+                para comenzar a medir la calidad del proyecto.
+            </p>
+
+            <a
+                href="{{ url_for('nueva_evaluacion') }}"
+                class="boton-principal"
+            >
+                + Crear evaluación
+            </a>
+
+        </div>
+
+
+    {% endif %}
+
+</div>
+
+</body>
+
+</html>

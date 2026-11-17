@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Editar defecto - QualityCheck</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f5f7fa;
+            color: #1f2937;
+        }
+
+        header {
+            background: linear-gradient(
+                135deg,
+                #173b5e,
+                #1f5f8f
+            );
+            color: white;
+            padding: 24px 40px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        header p {
+            margin: 6px 0 0;
+            opacity: 0.85;
+        }
+
+        .contenedor {
+            width: 92%;
+            max-width: 900px;
+            margin: 30px auto;
+        }
+
+        .encabezado {
+            margin-bottom: 20px;
+        }
+
+        .encabezado h2 {
+            margin: 0;
+            color: #173b5e;
+            font-size: 25px;
+        }
+
+        .encabezado p {
+            margin: 6px 0 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .tarjeta {
+            background: white;
+            padding: 28px;
+            border-radius: 10px;
+
+            box-shadow:
+                0 2px 10px rgba(0, 0, 0, 0.06);
+        }
+
+        .campo {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+            font-size: 14px;
+            color: #374151;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 7px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            background: white;
+            color: #1f2937;
+            transition: 0.2s;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #1f6fb2;
+
+            box-shadow:
+                0 0 0 3px rgba(31, 111, 178, 0.12);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 110px;
+        }
+
+        .ayuda {
+            display: block;
+            margin-top: 5px;
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        .fila {
+            display: grid;
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .bloque-alerta {
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            color: #9a3412;
+            padding: 12px 14px;
+            border-radius: 7px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .acciones {
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid #edf0f2;
+
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .boton-guardar {
+            background: #1f6fb2;
+            color: white;
+            border: none;
+            padding: 11px 18px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .boton-guardar:hover {
+            background: #15598f;
+        }
+
+        .boton-cancelar {
+            background: #eef1f4;
+            color: #374151;
+            text-decoration: none;
+            padding: 11px 18px;
+            border-radius: 7px;
+            font-weight: bold;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .boton-cancelar:hover {
+            background: #dde3e8;
+        }
+
+        @media (max-width: 700px) {
+
+            header {
+                padding: 20px;
+            }
+
+            .contenedor {
+                width: 95%;
+            }
+
+            .tarjeta {
+                padding: 20px;
+            }
+
+            .fila {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .acciones {
+                flex-direction: column-reverse;
+            }
+
+            .boton-guardar,
+            .boton-cancelar {
+                width: 100%;
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<header>
+
+    <h1>
+        QualityCheck
+    </h1>
+
+    <p>
+        Sistema de gestión y evaluación de calidad de software
+    </p>
+
+</header>
+
+
+<div class="contenedor">
+
+    <div class="encabezado">
+
+        <h2>
+            Editar defecto
+        </h2>
+
+        <p>
+            Actualiza la información del defecto registrado.
+        </p>
+
+    </div>
+
+
+    <form method="POST" class="tarjeta">
+
+        <div class="bloque-alerta">
+            Mantén actualizados el estado, la severidad y la evidencia
+            para conservar la trazabilidad del defecto.
+        </div>
+
+
+        <!-- CASO DE PRUEBA -->
+
+        <div class="campo">
+
+            <label>
+                Caso de prueba relacionado
+            </label>
+
+            <select name="caso_prueba_id">
+
+                <option value="">
+                    Sin caso asociado
+                </option>
+
+                {% for caso in casos %}
+
+                    <option
+                        value="{{ caso['id'] }}"
+
+                        {% if caso['id'] == defecto['caso_prueba_id'] %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ caso['proyecto'] }}
+                        -
+                        {{ caso['codigo'] }}
+                        -
+                        {{ caso['requisito'] }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+            <span class="ayuda">
+                Caso de prueba donde fue identificado el defecto.
+            </span>
+
+        </div>
+
+
+        <!-- CÓDIGO -->
+
+        <div class="campo">
+
+            <label>
+                Código
+            </label>
+
+            <input
+                type="text"
+                name="codigo"
+                value="{{ defecto['codigo'] }}"
+                required
+            >
+
+        </div>
+
+
+        <!-- DESCRIPCIÓN -->
+
+        <div class="campo">
+
+            <label>
+                Descripción
+            </label>
+
+            <textarea
+                name="descripcion"
+                required
+            >{{ defecto['descripcion'] }}</textarea>
+
+        </div>
+
+
+        <!-- PASOS -->
+
+        <div class="campo">
+
+            <label>
+                Pasos para reproducir
+            </label>
+
+            <textarea
+                name="pasos_reproducir"
+                required
+            >{{ defecto['pasos_reproducir'] }}</textarea>
+
+        </div>
+
+
+        <!-- SEVERIDAD Y ESTADO -->
+
+        <div class="fila">
+
+            <div class="campo">
+
+                <label>
+                    Severidad
+                </label>
+
+                <select
+                    name="severidad"
+                    required
+                >
+
+                    <option
+                        value="Crítica"
+
+                        {% if defecto['severidad'] == 'Crítica' %}
+                            selected
+                        {% endif %}
+                    >
+                        Crítica
+                    </option>
+
+                    <option
+                        value="Alta"
+
+                        {% if defecto['severidad'] == 'Alta' %}
+                            selected
+                        {% endif %}
+                    >
+                        Alta
+                    </option>
+
+                    <option
+                        value="Media"
+
+                        {% if defecto['severidad'] == 'Media' %}
+                            selected
+                        {% endif %}
+                    >
+                        Media
+                    </option>
+
+                    <option
+                        value="Baja"
+
+                        {% if defecto['severidad'] == 'Baja' %}
+                            selected
+                        {% endif %}
+                    >
+                        Baja
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="campo">
+
+                <label>
+                    Estado
+                </label>
+
+                <select
+                    name="estado"
+                    required
+                >
+
+                    <option
+                        value="Abierto"
+
+                        {% if defecto['estado'] == 'Abierto' %}
+                            selected
+                        {% endif %}
+                    >
+                        Abierto
+                    </option>
+
+                    <option
+                        value="En proceso"
+
+                        {% if defecto['estado'] == 'En proceso' %}
+                            selected
+                        {% endif %}
+                    >
+                        En proceso
+                    </option>
+
+                    <option
+                        value="Resuelto"
+
+                        {% if defecto['estado'] == 'Resuelto' %}
+                            selected
+                        {% endif %}
+                    >
+                        Resuelto
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <!-- RESPONSABLE -->
+
+        <div class="campo">
+
+            <label>
+                Responsable
+            </label>
+
+            <input
+                type="text"
+                name="responsable"
+                value="{{ defecto['responsable'] }}"
+                required
+            >
+
+            <span class="ayuda">
+                Persona encargada de revisar o solucionar el defecto.
+            </span>
+
+        </div>
+
+
+        <!-- EVIDENCIA -->
+
+        <div class="campo">
+
+            <label>
+                Evidencia
+            </label>
+
+            <textarea
+                name="evidencia"
+            >{{ defecto['evidencia'] or '' }}</textarea>
+
+            <span class="ayuda">
+                Describe la evidencia o referencia asociada al defecto.
+            </span>
+
+        </div>
+
+
+        <!-- ACCIONES -->
+
+        <div class="acciones">
+
+            <a
+                href="{{ url_for('listar_defectos') }}"
+                class="boton-cancelar"
+            >
+                Cancelar
+            </a>
+
+            <button
+                type="submit"
+                class="boton-guardar"
+            >
+                Guardar cambios
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+
+</html>

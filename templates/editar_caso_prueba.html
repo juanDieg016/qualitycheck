@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Editar caso de prueba - QualityCheck</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f5f7fa;
+            color: #1f2937;
+        }
+
+        header {
+            background: linear-gradient(
+                135deg,
+                #173b5e,
+                #1f5f8f
+            );
+            color: white;
+            padding: 24px 40px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        header p {
+            margin: 6px 0 0;
+            opacity: 0.85;
+        }
+
+        .contenedor {
+            width: 92%;
+            max-width: 950px;
+            margin: 30px auto;
+        }
+
+        .encabezado {
+            margin-bottom: 20px;
+        }
+
+        .encabezado h2 {
+            margin: 0;
+            color: #173b5e;
+            font-size: 25px;
+        }
+
+        .encabezado p {
+            margin: 6px 0 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .tarjeta {
+            background: white;
+            padding: 28px;
+            border-radius: 10px;
+
+            box-shadow:
+                0 2px 10px rgba(0, 0, 0, 0.06);
+        }
+
+        .campo {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+            font-size: 14px;
+            color: #374151;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 7px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            background: white;
+            color: #1f2937;
+            transition: 0.2s;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #1f6fb2;
+
+            box-shadow:
+                0 0 0 3px rgba(31, 111, 178, 0.12);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 110px;
+        }
+
+        .textarea-grande {
+            min-height: 140px;
+        }
+
+        .ayuda {
+            display: block;
+            margin-top: 5px;
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        .fila {
+            display: grid;
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .bloque-info {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
+            padding: 12px 14px;
+            border-radius: 7px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .acciones {
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid #edf0f2;
+
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .boton-guardar {
+            background: #1f6fb2;
+            color: white;
+            border: none;
+            padding: 11px 18px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .boton-guardar:hover {
+            background: #15598f;
+        }
+
+        .boton-cancelar {
+            background: #eef1f4;
+            color: #374151;
+            text-decoration: none;
+            padding: 11px 18px;
+            border-radius: 7px;
+            font-weight: bold;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .boton-cancelar:hover {
+            background: #dde3e8;
+        }
+
+        @media (max-width: 700px) {
+
+            header {
+                padding: 20px;
+            }
+
+            .contenedor {
+                width: 95%;
+            }
+
+            .tarjeta {
+                padding: 20px;
+            }
+
+            .fila {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .acciones {
+                flex-direction: column-reverse;
+            }
+
+            .boton-guardar,
+            .boton-cancelar {
+                width: 100%;
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<header>
+
+    <h1>
+        QualityCheck
+    </h1>
+
+    <p>
+        Sistema de gestión y evaluación de calidad de software
+    </p>
+
+</header>
+
+
+<div class="contenedor">
+
+    <div class="encabezado">
+
+        <h2>
+            Editar caso de prueba
+        </h2>
+
+        <p>
+            Actualiza la información del caso de prueba,
+            su ejecución y los resultados obtenidos.
+        </p>
+
+    </div>
+
+
+    <form method="POST" class="tarjeta">
+
+
+        <div class="bloque-info">
+            Mantén actualizado el estado de la prueba,
+            el resultado obtenido y la fecha de ejecución
+            para conservar una trazabilidad correcta.
+        </div>
+
+
+        <!-- REQUISITO -->
+
+        <div class="campo">
+
+            <label>
+                Requisito asociado
+            </label>
+
+            <select
+                name="requisito_id"
+                required
+            >
+
+                {% for requisito in requisitos %}
+
+                    <option
+                        value="{{ requisito['id'] }}"
+
+                        {% if requisito['id'] == caso['requisito_id'] %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ requisito['proyecto'] }}
+                        -
+                        {{ requisito['codigo'] }}
+                        -
+                        {{ requisito['descripcion'] }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+            <span class="ayuda">
+                Requisito que está siendo validado
+                mediante este caso de prueba.
+            </span>
+
+        </div>
+
+
+        <!-- CÓDIGO -->
+
+        <div class="campo">
+
+            <label>
+                Código del caso
+            </label>
+
+            <input
+                type="text"
+                name="codigo"
+                value="{{ caso['codigo'] }}"
+                required
+            >
+
+        </div>
+
+
+        <!-- OBJETIVO -->
+
+        <div class="campo">
+
+            <label>
+                Objetivo
+            </label>
+
+            <textarea
+                name="objetivo"
+                required
+            >{{ caso['objetivo'] }}</textarea>
+
+        </div>
+
+
+        <!-- PRECONDICIONES -->
+
+        <div class="campo">
+
+            <label>
+                Precondiciones
+            </label>
+
+            <textarea
+                name="precondiciones"
+                required
+            >{{ caso['precondiciones'] }}</textarea>
+
+        </div>
+
+
+        <!-- PASOS -->
+
+        <div class="campo">
+
+            <label>
+                Pasos
+            </label>
+
+            <textarea
+                name="pasos"
+                class="textarea-grande"
+                required
+            >{{ caso['pasos'] }}</textarea>
+
+        </div>
+
+
+        <!-- DATOS DE ENTRADA -->
+
+        <div class="campo">
+
+            <label>
+                Datos de entrada
+            </label>
+
+            <textarea
+                name="datos_entrada"
+            >{{ caso['datos_entrada'] or '' }}</textarea>
+
+            <span class="ayuda">
+                Datos, usuarios, valores o parámetros utilizados
+                durante la ejecución.
+            </span>
+
+        </div>
+
+
+        <!-- RESULTADO ESPERADO -->
+
+        <div class="campo">
+
+            <label>
+                Resultado esperado
+            </label>
+
+            <textarea
+                name="resultado_esperado"
+                required
+            >{{ caso['resultado_esperado'] }}</textarea>
+
+        </div>
+
+
+        <!-- RESULTADO OBTENIDO -->
+
+        <div class="campo">
+
+            <label>
+                Resultado obtenido
+            </label>
+
+            <textarea
+                name="resultado_obtenido"
+            >{{ caso['resultado_obtenido'] or '' }}</textarea>
+
+            <span class="ayuda">
+                Registra el resultado real observado
+                al ejecutar la prueba.
+            </span>
+
+        </div>
+
+
+        <!-- ESTADO Y FECHA -->
+
+        <div class="fila">
+
+            <div class="campo">
+
+                <label>
+                    Estado
+                </label>
+
+                <select
+                    name="estado"
+                    required
+                >
+
+                    <option
+                        value="Pendiente"
+
+                        {% if caso['estado'] == 'Pendiente' %}
+                            selected
+                        {% endif %}
+                    >
+                        Pendiente
+                    </option>
+
+
+                    <option
+                        value="Aprobado"
+
+                        {% if caso['estado'] == 'Aprobado' %}
+                            selected
+                        {% endif %}
+                    >
+                        Aprobado
+                    </option>
+
+
+                    <option
+                        value="Fallido"
+
+                        {% if caso['estado'] == 'Fallido' %}
+                            selected
+                        {% endif %}
+                    >
+                        Fallido
+                    </option>
+
+
+                    <option
+                        value="Bloqueado"
+
+                        {% if caso['estado'] == 'Bloqueado' %}
+                            selected
+                        {% endif %}
+                    >
+                        Bloqueado
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="campo">
+
+                <label>
+                    Fecha de ejecución
+                </label>
+
+                <input
+                    type="date"
+                    name="fecha_ejecucion"
+                    value="{{ caso['fecha_ejecucion'] or '' }}"
+                >
+
+            </div>
+
+        </div>
+
+
+        <!-- EJECUTOR -->
+
+        <div class="campo">
+
+            <label>
+                Ejecutor
+            </label>
+
+            <input
+                type="text"
+                name="ejecutor"
+                value="{{ caso['ejecutor'] or '' }}"
+            >
+
+            <span class="ayuda">
+                Persona responsable de ejecutar
+                y documentar la prueba.
+            </span>
+
+        </div>
+
+
+        <!-- OBSERVACIONES -->
+
+        <div class="campo">
+
+            <label>
+                Observaciones
+            </label>
+
+            <textarea
+                name="observaciones"
+            >{{ caso['observaciones'] or '' }}</textarea>
+
+            <span class="ayuda">
+                Registra hallazgos, comentarios
+                o información adicional.
+            </span>
+
+        </div>
+
+
+        <!-- ACCIONES -->
+
+        <div class="acciones">
+
+            <a
+                href="{{ url_for('listar_casos_prueba') }}"
+                class="boton-cancelar"
+            >
+                Cancelar
+            </a>
+
+            <button
+                type="submit"
+                class="boton-guardar"
+            >
+                Guardar cambios
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+
+</html>
